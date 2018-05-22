@@ -339,17 +339,11 @@ class VisualizeRunner(Callback):
 
     def _trigger(self):
         for lst in self.dset.get_data():
-            # print(lst)
             prediction, viz = self.pred(lst)
-            # print(prediction)
-            # print(viz)
             inst_masks = get_instance_masks(prediction, 0.7) ### Bandwith is here
 
 
-            # self.trainer.monitors.put_image('pim_test', pim)
             self.trainer.monitors.put_image('pil_test', inst_masks)
-            # self.trainer.monitors.put_image('pil_test', np.expand_dims(get_colors(np.squeeze(pil), plt.cm.PiYG), axis=0))
-            # self.trainer.monitors.put_image('pil_test', np.expand_dims(np.expand_dims(pil, axis=0), axis=-1))
             viz = np.squeeze(np.array(viz))
             self.trainer.monitors.put_image('viz_test', viz)
 ###############################################################################
