@@ -505,7 +505,8 @@ def sample(dataDir, model_path, prefix='.'):
         input_names=['image'],
         output_names=['semantic', 'prediction']))
 
-    sbds = []
+    # sbds = []
+    vi_scores = []
     for k in range(len(imageFiles)): #range(1): #(len(imageFiles)):
         image = skimage.io.imread(imageFiles[k])
         label = skimage.io.imread(labelFiles[k])
@@ -613,12 +614,13 @@ def sample(dataDir, model_path, prefix='.'):
         # pil_flatten[idx_1d] = pil_masked_flatten
         # pil = np.reshape(pil_flatten, pim.shape)
 
-        pil = get_instance_masks(pred_pif, 1.0) ### Bandwith is here
-
-
-        sbd = calc_sbd(label, pil)
-        print 'Sbd ', sbd
-        sbds.append(sbd)
+        pil = get_instance_masks(pred_pif, 1.1) ### Bandwith is here
+        from sklearn.metrics import adjusted_rand_score
+        vi_score = adjusted_rand_score(label, pil)
+        vi_scores.append(vi_score)
+        # sbd = calc_sbd(label, pil)
+        # print 'Sbd ', sbd
+        # sbds.append(sbd)
 
         label = np.squeeze(label)
         pil = np.squeeze(pil)
@@ -627,8 +629,10 @@ def sample(dataDir, model_path, prefix='.'):
     
 
 
-    mean_sbd = np.mean(sbds)
-    print 'Mean sbds ', mean_sbd
+    # mean_sbd = np.mean(sbds)
+    # print 'Mean sbds ', mean_sbd
+    mean_vi_score = np.mean(vi_scores)
+    print 'mean_vi_score ', mean_vi_score
     print("Ending...")
     return None
 ###############################################################################
